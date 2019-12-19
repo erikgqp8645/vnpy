@@ -16,7 +16,6 @@ import talib
 from .object import BarData, TickData
 from .constant import Exchange, Interval
 
-
 log_formatter = logging.Formatter('[%(asctime)s] %(message)s')
 
 
@@ -126,6 +125,7 @@ def round_to(value: float, target: float) -> float:
     rounded = float(int(round(value / target)) * target)
     return rounded
 
+
 def round_to_nan(value: float, target: float):
     """
     Round price to price tick value.
@@ -133,7 +133,6 @@ def round_to_nan(value: float, target: float):
     tmp = float(target)
     rounded = int(round(np.nan_to_num(value) / tmp)) * tmp
     return rounded
-
 
 
 def floor_to(value: float, target: float) -> float:
@@ -168,11 +167,11 @@ class BarGenerator:
     """
 
     def __init__(
-        self,
-        on_bar: Callable,
-        window: int = 0,
-        on_window_bar: Callable = None,
-        interval: Interval = Interval.MINUTE
+            self,
+            on_bar: Callable,
+            window: int = 0,
+            on_window_bar: Callable = None,
+            interval: Interval = Interval.MINUTE
     ):
         """Constructor"""
         self.bar = None
@@ -241,7 +240,7 @@ class BarGenerator:
         # If not inited, creaate window bar object
         if not self.window_bar:
             # Generate timestamp for bar data
-            if self.interval == Interval.MINUTE:
+            if self.interval == Interval.MINUTE or self.interval == Interval.FMINUTE:
                 dt = bar.datetime.replace(second=0, microsecond=0)
             else:
                 dt = bar.datetime.replace(minute=0, second=0, microsecond=0)
@@ -270,7 +269,7 @@ class BarGenerator:
         # Check if window bar completed
         finished = False
 
-        if self.interval == Interval.MINUTE:
+        if self.interval == Interval.MINUTE:  # TODO 分钟合成器修改
             # x-minute bar
             if not (bar.datetime.minute + 1) % self.window:
                 finished = True
