@@ -10,7 +10,7 @@ from examples.cta_backtesting.basking import BacktestingEngine, OptimizationSett
 engine = BacktestingEngine()
 engine.set_parameters(
     vt_symbol="BTCUSD.BITFINEX",
-    interval="1m",
+    interval="5m",
     start=datetime(2019, 1, 1),
     end=datetime(2019, 10, 1),
     rate=3 / 1000,

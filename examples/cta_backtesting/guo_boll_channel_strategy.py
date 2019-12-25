@@ -42,7 +42,7 @@ class GuoBollChannelStrategy(CtaTemplate):
             cta_engine, strategy_name, vt_symbol, setting
         )
 
-        self.bg = BarGenerator(self.on_bar, 30, self.on_15min_bar)
+        self.bg = BarGenerator(self.on_bar, 30, self.on_15min_bar,interval=Interval.FMINUTE)
         self.am = ArrayManager(size=1000)
 
     def on_init(self):

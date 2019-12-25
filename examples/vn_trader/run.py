@@ -31,7 +31,7 @@ from vnpy.gateway.da import DaGateway
 from vnpy.gateway.coinbase import CoinbaseGateway
 
 from vnpy.app.cta_strategy import CtaStrategyApp
-# from vnpy.app.csv_loader import CsvLoaderApp
+from vnpy.app.csv_loader import CsvLoaderApp
 # from vnpy.app.algo_trading import AlgoTradingApp
 from vnpy.app.cta_backtester import CtaBacktesterApp
 # from vnpy.app.data_recorder import DataRecorderApp
@@ -79,7 +79,7 @@ def main():
     #### 中层接口
     main_engine.add_app(CtaStrategyApp)  # CTA策略引擎
     main_engine.add_app(CtaBacktesterApp)  # CTA回测引擎
-    # main_engine.add_app(CsvLoaderApp)  # CSV载入引擎
+    main_engine.add_app(CsvLoaderApp)  # CSV载入引擎
     # main_engine.add_app(AlgoTradingApp)  # 算法交易引擎
     # main_engine.add_app(DataRecorderApp)
     # main_engine.add_app(RiskManagerApp)

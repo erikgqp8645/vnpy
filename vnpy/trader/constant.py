@@ -142,6 +142,7 @@ class Interval(Enum):
     Interval of bar data.
     """
     MINUTE = "1m"
+    FMINUTE = "5m"
     HOUR = "1h"
     DAILY = "d"
     WEEKLY = "w"
