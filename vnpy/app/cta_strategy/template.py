@@ -18,11 +18,11 @@ class CtaTemplate(ABC):
     variables = []
 
     def __init__(
-            self,
-            cta_engine: Any,
-            strategy_name: str,
-            vt_symbol: str,
-            setting: dict,
+        self,
+        cta_engine: Any,
+        strategy_name: str,
+        vt_symbol: str,
+        setting: dict,
     ):
         """"""
         self.cta_engine = cta_engine
@@ -45,8 +45,6 @@ class CtaTemplate(ABC):
     def update_setting(self, setting: dict):
         """
         Update strategy parameter wtih value in setting dict.
-        作用：往对象里插入属性值
-        返回 name=name
         """
         for name in self.parameters:
             if name in setting:
@@ -56,8 +54,6 @@ class CtaTemplate(ABC):
     def get_class_parameters(cls):
         """
         Get default parameters dict of strategy class.
-        作用：获取对象的属性值
-
         """
         class_parameters = {}
         for name in cls.parameters:
@@ -96,12 +92,10 @@ class CtaTemplate(ABC):
         }
         return strategy_data
 
-    # 下面的函数被定义为虚函数，作用就是下面的函数可以被子类的方法随意修改
     @virtual
     def on_init(self):
         """
         Callback when strategy is inited.
-        初始化策略
         """
         pass
 
@@ -109,7 +103,6 @@ class CtaTemplate(ABC):
     def on_start(self):
         """
         Callback when strategy is started.
-        启动策略
         """
         pass
 
@@ -117,7 +110,6 @@ class CtaTemplate(ABC):
     def on_stop(self):
         """
         Callback when strategy is stopped.
-        停止策略
         """
         pass
 
@@ -125,7 +117,6 @@ class CtaTemplate(ABC):
     def on_tick(self, tick: TickData):
         """
         Callback of new tick data update.
-        推送tick数据
         """
         pass
 
@@ -133,7 +124,6 @@ class CtaTemplate(ABC):
     def on_bar(self, bar: BarData):
         """
         Callback of new bar data update.
-        推送bar数据
         """
         pass
 
@@ -141,7 +131,6 @@ class CtaTemplate(ABC):
     def on_trade(self, trade: TradeData):
         """
         Callback of new trade data update.
-        成交数据推送
         """
         pass
 
@@ -149,7 +138,6 @@ class CtaTemplate(ABC):
     def on_order(self, order: OrderData):
         """
         Callback of new order data update.
-        订单数据更新
         """
         pass
 
@@ -157,56 +145,44 @@ class CtaTemplate(ABC):
     def on_stop_order(self, stop_order: StopOrder):
         """
         Callback of stop order update.
-        停止单数据更新
         """
         pass
 
     def buy(self, price: float, volume: float, stop: bool = False, lock: bool = False):
         """
         Send buy order to open a long position.
-        买入开仓
         """
         return self.send_order(Direction.LONG, Offset.OPEN, price, volume, stop, lock)
 
     def sell(self, price: float, volume: float, stop: bool = False, lock: bool = False):
         """
         Send sell order to close a long position.
-        卖出平多
-        :param price: 价格
-        :param volume: 数量
-        :param stop: 是否为停止单
-        :param lock: 是否锁仓
-        :return:
         """
-
         return self.send_order(Direction.SHORT, Offset.CLOSE, price, volume, stop, lock)
 
     def short(self, price: float, volume: float, stop: bool = False, lock: bool = False):
         """
         Send short order to open as short position.
-        卖出开空
         """
         return self.send_order(Direction.SHORT, Offset.OPEN, price, volume, stop, lock)
 
     def cover(self, price: float, volume: float, stop: bool = False, lock: bool = False):
         """
         Send cover order to close a short position.
-        买入平空
         """
         return self.send_order(Direction.LONG, Offset.CLOSE, price, volume, stop, lock)
 
     def send_order(
-            self,
-            direction: Direction,
-            offset: Offset,
-            price: float,
-            volume: float,
-            stop: bool = False,
-            lock: bool = False
+        self,
+        direction: Direction,
+        offset: Offset,
+        price: float,
+        volume: float,
+        stop: bool = False,
+        lock: bool = False
     ):
         """
         Send a new order.
-        下单函数
         """
         if self.trading:
             vt_orderids = self.cta_engine.send_order(
@@ -219,7 +195,6 @@ class CtaTemplate(ABC):
     def cancel_order(self, vt_orderid: str):
         """
         Cancel an existing order.
-        根据订单id取消订单
         """
         if self.trading:
             self.cta_engine.cancel_order(self, vt_orderid)
@@ -227,7 +202,6 @@ class CtaTemplate(ABC):
     def cancel_all(self):
         """
         Cancel all orders sent by strategy.
-        取消所有订单
         """
         if self.trading:
             self.cta_engine.cancel_all(self)
@@ -235,26 +209,23 @@ class CtaTemplate(ABC):
     def write_log(self, msg: str):
         """
         Write a log message.
-        输出日志
         """
         self.cta_engine.write_log(msg, self)
 
     def get_engine_type(self):
         """
         Return whether the cta_engine is backtesting or live trading.
-        判断是实盘还是回测
         """
         return self.cta_engine.get_engine_type()
 
     def load_bar(
-            self,
-            days: int,
-            interval: Interval = Interval.MINUTE,
-            callback: Callable = None,
+        self,
+        days: int,
+        interval: Interval = Interval.MINUTE,
+        callback: Callable = None,
     ):
         """
         Load historical bar data for initializing strategy.
-        加载历史柱线数据以初始化策略。
         """
         if not callback:
             callback = self.on_bar
@@ -284,7 +255,6 @@ class CtaTemplate(ABC):
     def sync_data(self):
         """
         Sync strategy variables value into disk storage.
-        将策略变量值同步到磁盘存储中
         """
         if self.trading:
             self.cta_engine.sync_strategy_data(self)
