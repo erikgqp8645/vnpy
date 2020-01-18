@@ -14,7 +14,7 @@ from vnpy.trader.constant import Interval
 
 class TurtleStrategy(CtaTemplate):
     """"""
-    author = "用Python的交易员"
+    author = "Guo"
 
     entry_window = 100  # 入场通道窗口数
     exit_window = 200  # 出场通道的窗口数
