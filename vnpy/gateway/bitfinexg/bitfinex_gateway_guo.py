@@ -665,6 +665,7 @@ class BitfinexWebsocketApi(WebsocketClient):
             self.gateway.write_log("账户资金获取成功")
         elif name == "wu":
             self.on_wallet(info)
+            self.gateway.write_log("账户资金 usd 【更新】获取成功 wallets")
         elif name == "os":
             for l in info:
                 self.on_order(l)
@@ -675,6 +676,23 @@ class BitfinexWebsocketApi(WebsocketClient):
             self.on_trade(info)
         elif name == "n":
             self.on_order_error(info)
+        # elif name == "ps": # 当前仓位信息
+        #     for l in info:
+        #         # self.on_position(l)
+        #         print(l)
+        #         self.gateway.write_log("api 仓位初始化【快照】positon 获取成功")
+        elif name in ["pn", "pu", "pc"]:
+            """
+             这里获取的每一个资金账户之中的每一个币种，并且一一列举出来，包含利润，杠杆等信息
+             这里对仓位进行细粒度的控制，因为仓位的放行决定了 order 的方向
+             [0, 'ps', [['tEOSUSD', 'ACTIVE', -26.369349,            2.8374,              -4.511e-05, 0, None, None, None, None]
+             [0, 'pn', ['tEOSUSD', 'ACTIVE', -6, 4.9154, 0, 0, None, None, None, None, None, None, None, None, None, 0, None, None, None, None]]
+             [0, 'pc', ['tEOSUSD', 'CLOSED', 0, 4.9, 0, 0, None, None, None, None, None, None, None, None, None, 0, None, None, None, None]]
+             [0, 'pu', ['tEOSUSD',    'ACTIVE', -26.369349,  2.8374,    -5.205e-05,        0,                6.03048553,         8.05994925,  3.32558392,  -2.4796]]
+             """
+            self.on_position(info)
+            print("info:",info)
+            self.gateway.write_log("api 持仓信息【更新】positon 获取成功")
 
     def on_error(self, exception_type: type, exception_value: Exception, tb):
         """"""
@@ -852,7 +870,7 @@ class BitfinexWebsocketApi(WebsocketClient):
 
         self.gateway.on_order(copy(order))
 
-    def on_position(self, d):
+    def on_position(self, date):
         """
         返回数据结构
         [   0,   "pu",
@@ -921,24 +939,24 @@ class BitfinexWebsocketApi(WebsocketClient):
         #
         # self.gateway.on_position(position)
         position = PositionData(
-            symbol=str(d[0].replace("t", "")),  # 移除前面的T
+            symbol=str(date[0].replace("t", "")),  # 移除前面的T
             exchange=Exchange.BITFINEX,
             direction=Direction.LONG,
-            volume=int(d[2]),
+            volume=float(date[2]),
             frozen=0,
-            price=float(d[3]),
-            pnl=float(d[6]),
+            price=float(date[3]),
+            pnl=float(date[6]),
             gateway_name=self.gateway_name,
         )
         self.gateway.on_position(position)
         pos = PositionData(
-            symbol=str(d[0].replace("t", "")),
+            symbol=str(date[0].replace("t", "")),
             exchange=Exchange.BITFINEX,
             direction=Direction.LONG,
-            volume=int(d[2]),
+            volume=float(date[2]),
             frozen=0,
-            price=float(d[3]),
-            pnl=float(d[6]),
+            price=float(date[3]),
+            pnl=float(date[6]),
             gateway_name=self.gateway_name, )
         self.gateway.on_position(pos)
 
@@ -948,4 +966,3 @@ if __name__ == "__main__":
     ws = BitfinexWebsocketApi(gateway=cont)
     setting = cont.default_setting
     print(ws.subscribe())
-
