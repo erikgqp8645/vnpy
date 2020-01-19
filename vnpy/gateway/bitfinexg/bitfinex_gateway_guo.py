@@ -413,7 +413,7 @@ class BitfinexWebsocketApi(WebsocketClient):
     def subscribe(self, req: SubscribeRequest):
         """
         Subscribe to tick data upate.
-        订阅tick和candle
+        订阅tick和book
         """
         if req.symbol not in self.subscribed:
             self.subscribed[req.symbol] = req
@@ -666,10 +666,10 @@ class BitfinexWebsocketApi(WebsocketClient):
         elif name == "wu":
             self.on_wallet(info)
             self.gateway.write_log("账户资金 usd 【更新】获取成功 wallets")
-        elif name == "os":
-            for l in info:
-                self.on_order(l)
-            self.gateway.write_log("活动委托获取成功")
+        # elif name == "os":
+        #     for l in info:
+        #         self.on_order(l)
+        #     self.gateway.write_log("活动委托获取成功")
         elif name in ["on", "ou", "oc"]:
             self.on_order(info)
         elif name == "te":

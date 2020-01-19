@@ -60,7 +60,7 @@ def main():
     # main_engine.add_gateway(FemasGateway)
     # main_engine.add_gateway(IbGateway)
     # main_engine.add_gateway(FutuGateway)
-    main_engine.add_gateway(BitmexGateway)
+    # main_engine.add_gateway(BitmexGateway)
     # main_engine.add_gateway(TigerGateway)
     # main_engine.add_gateway(OesGateway)
     # main_engine.add_gateway(OkexGateway)
@@ -75,7 +75,7 @@ def main():
     # main_engine.add_gateway(AlpacaGateway)
     # main_engine.add_gateway(OkexsGateway)
     # main_engine.add_gateway(DaGateway)
-    main_engine.add_gateway(CoinbaseGateway)
+    # main_engine.add_gateway(CoinbaseGateway)
 
     #### 中层接口
     main_engine.add_app(CtaStrategyApp)  # CTA策略引擎
